@@ -2,6 +2,7 @@
 .git/
 .github/
 .vscode/
+node_modules/
 
 .dockerignore
 .env
