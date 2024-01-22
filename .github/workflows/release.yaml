@@ -73,3 +73,9 @@ jobs:
           git add helm/Chart.yaml
           git commit -m "Update Helm chart version to ${{ needs.version.outputs.new-version }}"
           git push
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: helm
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
