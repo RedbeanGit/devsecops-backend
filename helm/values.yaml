@@ -1,0 +1,2 @@
+ingress:
+  hostname: api.devsecops.local
