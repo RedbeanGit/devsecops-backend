@@ -65,6 +65,7 @@ jobs:
           fetch-depth: 0
       - name: Update Chart.yaml with new version
         run: |
+          sed -i 's/^version: .*/version: "${{ needs.version.outputs.new-version }}"/' helm/Chart.yaml
           sed -i 's/^appVersion: .*/appVersion: "${{ needs.version.outputs.new-version }}"/' helm/Chart.yaml
       - name: Commit and push changes
         run: |
