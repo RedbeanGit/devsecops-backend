@@ -67,15 +67,15 @@ jobs:
       - id: bump-chart-version
         name: Update Chart.yaml with new version
         run: |
-          sed -i 's/^version: .*/version: "${{ needs.version.outputs.new-version }}"/' helm/Chart.yaml
-          sed -i 's/^appVersion: .*/appVersion: "${{ needs.version.outputs.new-version }}"/' helm/Chart.yaml
+          sed -i 's/^version: .*/version: "${{ needs.version.outputs.new-version }}"/' charts/devsecops-backend/Chart.yaml
+          sed -i 's/^appVersion: .*/appVersion: "${{ needs.version.outputs.new-version }}"/' charts/devsecops-backend/Chart.yaml
       - id: commit
         name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add helm/Chart.yaml
-          git commit -m "Update Helm chart version to ${{ needs.version.outputs.new-version }}"
+          git add charts/devsecops-backend/Chart.yaml
+          git commit -m "chore: Update Helm chart version to ${{ needs.version.outputs.new-version }}"
           git push
       - id: package-chart
         name: Run chart-releaser
