@@ -12,7 +12,11 @@ process.on("SIGINT", () => {
 
 const PORT = 3000;
 
-const redisClient = createClient();
+const redisClient = createClient({
+  host: process.env.REDIS_HOST || "localhost",
+  port: process.env.REDIS_PORT || 6379,
+  retry_strategy: () => 1000,
+});
 const app = express();
 
 const currentDir = new URL(".", import.meta.url).pathname + "/files";
