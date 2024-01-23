@@ -3,12 +3,16 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
+import { createClient } from "redis";
 
 process.on("SIGINT", () => {
   console.info("Interrupted");
   process.exit(0);
 });
 
+const PORT = 3000;
+
+const redisClient = createClient();
 const app = express();
 
 const currentDir = new URL(".", import.meta.url).pathname + "/files";
@@ -16,6 +20,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 const clearFiles = () => {
+  console.log("Clearing files");
   exec("node src/clear.js", (error, stdout, stderr) => {
     if (error) {
       console.error(`Error while trying to run clear.js: ${error}`);
@@ -29,9 +34,9 @@ const clearFiles = () => {
 
 setInterval(clearFiles, 30000);
 
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.single("file"), async (req, res) => {
   if (!req.file || !req.body.filename) {
-    return res.status(400).send("No file or filename provided");
+    return res.status(400).json({ message: "No file or filename provided" });
   }
 
   const filename = req.body.filename;
@@ -44,19 +49,35 @@ app.post("/upload", upload.single("file"), (req, res) => {
   }
 
   // Write buffer to file
-  fs.writeFile(filepath, req.file.buffer, (err) => {
+  fs.writeFile(filepath, req.file.buffer, async (err) => {
     if (err) {
-      return res.status(500).send("Error writing file");
+      return res.status(500).json({ message: "Error writing file" });
     }
-    res.send(`File uploaded as ${filename}`);
+
+    try {
+      await redisClient.incr("uploadCount");
+      res.json({ filename });
+    } catch (err) {
+      res.status(500).json({ message: "Error incrementing upload count" });
+    }
   });
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).send("Server is healthy");
+app.get("/count", async (_, res) => {
+  try {
+    const count = await redisClient.get("uploadCount");
+    res.json({ count: count || 0 });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving count from Redis" });
+  }
 });
 
-const PORT = 3000;
+app.get("/health", (req, res) => {
+  res.status(200).json({ healthy: true });
+});
+
+redisClient.connect();
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
