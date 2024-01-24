@@ -5,6 +5,7 @@ import path from "path";
 import { exec } from "child_process";
 import { createClient } from "redis";
 import dotenv from "dotenv";
+import cors from "cors";
 
 process.on("SIGINT", () => {
   console.info("Interrupted");
@@ -39,6 +40,7 @@ const clearFiles = () => {
 
 setInterval(clearFiles, 30000);
 
+app.use(cors());
 app.post("/upload", upload.single("file"), async (req, res) => {
   if (!req.file || !req.body.filename) {
     return res.status(400).json({ message: "No file or filename provided" });
