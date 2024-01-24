@@ -1,2 +1,5 @@
 ingress:
   hostname: api.devsecops.local
+redis:
+  host: redis.devsecops.local
+  port: 6379
