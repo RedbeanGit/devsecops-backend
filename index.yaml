@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   devsecops-backend:
   - apiVersion: v2
+    appVersion: 0.12.0
+    created: "2024-01-24T15:17:52.457717384Z"
+    digest: edb61c307231740084b9483657493d073bfb4f9707decc17e6dcacb716cd57bd
+    name: devsecops-backend
+    type: application
+    urls:
+    - https://github.com/RedbeanGit/devsecops-backend/releases/download/devsecops-backend-0.12.0/devsecops-backend-0.12.0.tgz
+    version: 0.12.0
+  - apiVersion: v2
     appVersion: 0.11.0
     created: "2024-01-24T15:01:45.226750853Z"
     digest: 9910f3a69f60397c09f65cbe475a6e4210106b5baad2fbce4b8468ba06fc05fd
@@ -46,4 +55,4 @@ entries:
     urls:
     - https://github.com/RedbeanGit/devsecops-backend/releases/download/devsecops-backend-0.7.0/devsecops-backend-0.7.0.tgz
     version: 0.7.0
-generated: "2024-01-24T15:01:45.226779447Z"
+generated: "2024-01-24T15:17:52.457750305Z"
