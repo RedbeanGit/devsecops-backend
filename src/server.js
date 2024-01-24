@@ -4,18 +4,19 @@ import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
 import { createClient } from "redis";
+import dotenv from "dotenv";
 
 process.on("SIGINT", () => {
   console.info("Interrupted");
   process.exit(0);
 });
 
+dotenv.config();
+
 const PORT = 3000;
 
 const redisClient = createClient({
-  host: process.env.REDIS_HOST || "localhost",
-  port: process.env.REDIS_PORT || 6379,
-  retry_strategy: () => 1000,
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
 });
 const app = express();
 
